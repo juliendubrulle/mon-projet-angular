@@ -1,12 +1,27 @@
-import { Component } from '@angular/core';
-import { AuthService } from './service/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'app';
+export class AppComponent implements OnInit {
+
+  secondes: number;
+  counterSubscription : Subscription;
+
+  ngOnInit() {
+    const counter = interval(1000);
+    this.counterSubscription = counter.subscribe(
+      (value) => { this.secondes = value },
+      (error) => { console.log('Uh-oh, an error occored ! :' + error) },
+      () => { console.log('Observable complete ! ') }
+    )
+  }
+
+  ngOnDestroy(){
+    this.counterSubscription.unsubscribe();
+  }
 }
 
